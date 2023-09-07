@@ -7,10 +7,10 @@
     :date: 2023.07.04
     :license: Apache Licence 2.0
 """
+
 from fastapi import APIRouter, Security
 from pydantic import BaseModel
 from starlette.requests import Request
-
 from core.authorize import check_permissions
 from core.utils import get_header_username
 from curd.moral import DL_Moral_Update_Record, MoralRecordPostSchema, DL_StudentMoral_Retrieve_By_status
@@ -122,17 +122,15 @@ async def Create_StudentMoralRecord_with_Result(newpost: MoralRecordPostSchema):
         E500("审核状态必须为1/2/3，已经通过审核的无法上传至系统中")
 
 
-
-@management_router.get("/get/moral/record/unchecked",
-                       description="获取当前未审核记录",
-                       name="获取未审核记录")
-async def GET_StudentMoralRecord_Unchecked():
-    """
-    获取所有未审核的记录的列表
-    :return:
-    """
+@management_router.get("/get/moral/record/byType",
+                       description="根据类型获取记录",
+                       name="获取指定记录"
+                       )
+async def GET_StudentMoralRecord_by_Type(t: int):
+    if t < 1 or t > 5:
+        E500("Error of type")
     try:
-        results = await DL_StudentMoral_Retrieve_By_status(1)
+        results = await DL_StudentMoral_Retrieve_By_status(t)
         return results
     except Exception as e:
         E500(e)

@@ -79,9 +79,25 @@ class Config(BaseSettings):
         'timezone': 'Asia/Shanghai'
     }
 
+    # -----------------Redis-----------
+    CACHE_CONFIG: dict = {
+        "CACHE_HOST": os.environ.get("CACHE_HOST"),  # Redis连接
+        "CACHE_PORT": os.environ.get("CACHE_PORT"),  # Redis端口
+        "CACHE_CP": "utf-8",  # Redis CodePage （编码）
+        "CACHE_decode_responses": True  # 与Redis的连接编码，True会将结果返回为字符串
+    }
+    CACHE_URL: str = f"redis://{CACHE_CONFIG['CACHE_HOST']}:{CACHE_CONFIG['CACHE_PORT']}"
+    CACHE_DB_IDX: dict = {
+        "system": 0,
+        "code": 1,
+        "log": 2,
+        "access": 3,
+        "info": 4,
+        "doc": 5
+    }
+
     SINGLE_FILE_STORAGE_PATH: List = [".", "storage", "single"]
     META_FILE_STORAGE_PATH: List = [".", "storage", "meta"]
-
     APP_ENCRYPT_SECRET: str = os.environ.get("APP_ENCRYPT_SECRET")
     APP_INIT_SECRET: str = os.environ.get("APP_INIT_SECRET")
 

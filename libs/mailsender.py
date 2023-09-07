@@ -47,4 +47,4 @@ class EMailSender:
             except Exception as e:
                 print(e)
                 # TODO logger
-EMailSender(username=config.EMAIL_USERNAME,password=config.EMAIL_PASSWORD)
+email_sender = EMailSender(username=config.EMAIL_USERNAME,password=config.EMAIL_PASSWORD)

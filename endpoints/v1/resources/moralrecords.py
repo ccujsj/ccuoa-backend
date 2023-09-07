@@ -9,14 +9,30 @@
 """
 
 from fastapi import APIRouter, Security
-
+import pickle
 from core.authorize import check_permissions
 from curd.moral import MoralRecordPostSchema, DL_Moral_Create_New_Post, DL_StudentMoral_Retrieve_By_username
 from curd.student import DL_StudentMoralScore_Retrieve_By_username
+from datasource.redis import access_cache
 from response.resexception import E404
 from response.stdresp import StdResp
 
 res_moral_router = APIRouter()
+
+
+@res_moral_router.on_event("startup")
+async def startup_event():
+    res_moral_router.lifespan_context.redis = await access_cache()
+    # allow access to cache
+    # but not being used
+    pass
+
+
+@res_moral_router.on_event("shutdown")
+async def shutdown_event():
+    cache = await res_moral_router.lifespan_context.redis
+    await cache.close()
+    pass
 
 
 @res_moral_router.post("/put/moral/record", dependencies=[Security(check_permissions, scopes=["staff"])],
@@ -28,16 +44,16 @@ async def PUT_new_moralRecord_bySchema(newRecord: MoralRecordPostSchema):
 
 
 @res_moral_router.get("/get/moral/record/id",
-                       description="通过id查询德育分记录",
-                       name="查询德育分记录")
+                      description="通过id查询德育分记录",
+                      name="查询德育分记录")
 async def GET_MoralRecord_by_username(uid: str):
     results = await DL_StudentMoral_Retrieve_By_username(uid)
     return results
 
 
 @res_moral_router.get("/get/moral/score/id",
-                       description="通过id查询德育分分数",
-                       name="查询德育分分数")
+                      description="通过id查询德育分分数",
+                      name="查询德育分分数")
 async def GET_MoralScore_by_username(uid: str):
     data = await DL_StudentMoralScore_Retrieve_By_username(uid)
     if data:

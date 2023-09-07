@@ -9,6 +9,8 @@
 """
 import aioredis
 from aioredis import Redis
+from fastapi import FastAPI
+
 from config import config
 
 
@@ -51,10 +53,20 @@ async def info_cache() -> Redis:
     sys_cache_pool = aioredis.ConnectionPool.from_url(
         config.CACHE_URL,
         db=config.CACHE_DB_IDX.get('info')
-        # info缓存由于采用的是pickle私有二进制
+        # info缓存采用的是pickle私有二进制
     )
     return Redis(connection_pool=sys_cache_pool)
 
+async def access_cache() -> Redis:
+    """
+    访问缓存
+    :return:
+    """
+    sys_cache_pool = aioredis.ConnectionPool.from_url(
+        config.CACHE_URL,
+        db=config.CACHE_DB_IDX.get('access')
+    )
+    return Redis(connection_pool=sys_cache_pool)
 
 async def doc_cache() -> Redis:
     sys_cache_pool = aioredis.ConnectionPool.from_url(
@@ -64,3 +76,4 @@ async def doc_cache() -> Redis:
         decode_responses=True
     )
     return Redis(connection_pool=sys_cache_pool)
+

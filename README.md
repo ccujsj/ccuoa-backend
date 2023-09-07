@@ -74,3 +74,18 @@ docker logs -f --tail 100 [docker_ID] >> /var/log/sams/logs/STDOUTlogfile.txt 2>
 /usr/local/sams/log
 /usr/local/sams/storage
 ```
+
+## Information
+
+根据SOIP相关内容，系统中的文本信息定义如下：
+
+1类信息定义为：信息公开
+2类信息定义为：快捷链接
+3类信息定义为：关于我们
+
+其中必须要含有的是：type_a~type_e分别为：
+A类：生活意见反馈
+B类：校园建设反馈
+C类：学生工作建议
+D类：学生干部违纪举报
+E类：校园行政事务提问

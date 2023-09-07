@@ -7,6 +7,7 @@
     :license: Apache Licence 2.0
 """
 from typing import Callable
+
 from fastapi import FastAPI
 from datasource.mysql import register_mysql
 from datasource.redis import sys_cache, code_cache
@@ -14,7 +15,9 @@ from aioredis import Redis
 import os
 from config import config
 from core.logger import Logger
+
 syslog = Logger("SystemStatusLog").getLogger
+
 
 
 
@@ -24,6 +27,8 @@ def startup(app: FastAPI) -> Callable:
     :param app: FastAPI
     :return: start_app
     """
+
+    # 注入缓存
 
     async def app_start() -> None:
         # APP启动完成后触发
@@ -59,13 +64,12 @@ def stopping(app: FastAPI) -> Callable:
     async def stop_app() -> None:
         # APP停止时触发
         pass
-        """ 
+        """
         # 关闭Redis连接
         cache: Redis = await app.state.cache
         code: Redis = await app.state.code_cache
         await cache.close()
         await code.close()
         """
-
 
     return stop_app

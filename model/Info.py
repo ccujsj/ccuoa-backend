@@ -21,7 +21,7 @@ class Text(TimestampMixin):
     id = fields.IntField(pk=True,description="Primary key")
     text_type = fields.IntField(null=False,default=0,description="类型")
     text_key = fields.CharField(null=False,max_length=255,unique=True,description="键")
-    text_value = fields.CharField(null=False,max_length=255,unique=True,description="值")
+    text_value = fields.CharField(null=False,max_length=255,description="值")
 
     class Meta:
         table_description = "文本kv值"
